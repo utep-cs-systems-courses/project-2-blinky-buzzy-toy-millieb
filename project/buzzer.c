@@ -1,6 +1,7 @@
 #include <msp430.h>
 #include "libTimer.h"
 #include "buzzer.h"
+#include "led.h"
 
 void buzzer_init()
 {
@@ -44,5 +45,19 @@ void song()
   buzzer_set_period(0);
 }    
     
-  
+void song2(){
+  for(int i = 0; i<30; i++){
+
+    if(i % 2 == 0){
+      buzzer_set_period(2000);
+      toggle_on();
+
+    }else{
+      buzzer_set_period(1000);
+      toggle_off();
+    }
+    __delay_cycles(2500000);
+  }
+  buzzer_set_period(0);
+}
 

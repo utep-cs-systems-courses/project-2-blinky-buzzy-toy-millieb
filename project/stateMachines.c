@@ -19,12 +19,12 @@ void state_advance(int state)
       break;
 
     case 3:
-      siren_song();
+      song2();
       state = 0;
       break;
 
     case 4:
-      led_siren();
+      led_song2();
       state = 0;
       break;
 

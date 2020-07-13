@@ -59,7 +59,25 @@ void led_dim()
     }
 }
 
+void led_song2()
+{
+  for(int i = 0; i<20; i++)
+    { /* will switch from red to green and vice verse 100 times */
 
+      P1OUT = LED_GREEN;
+      __delay_cycles(500000);
+
+      P1OUT = !LED_RED;
+      __delay_cycles(2500000);
+
+      P1OUT = !LED_GREEN;
+      __delay_cycles(500000);
+
+      P1OUT = LED_RED;
+      __delay_cycles(2500000);
+
+     }
+}
 
 
 
