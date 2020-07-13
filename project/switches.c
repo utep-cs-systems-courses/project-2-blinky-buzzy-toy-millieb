@@ -2,27 +2,20 @@
 #include "switches.h"
 #include "led.h"
 #include "buzzer.h"
+#include "stateMachines.h"
 
-char switch_state_down,
-  switch_state_down2,
-  switch_state_down3,
-  switch_state_down4,
-  switch_state_changed; /* effectively boolean */
+char state, switch_state_down, switch_state_changed; /* effectively boolean */
 
-char state = 0;
-
-static char 
-switch_update_interrupt_sense()
+static char switch_update_interrupt_sense()
 {
-  char p1val = P2IN;
+  char p2val = P2IN;
   /* update switch interrupt to detect changes from current buttons */
-  P2IES |= (p1val & SWITCHES);	/* if switch up, sense down */
-  P2IES &= (p1val | ~SWITCHES);	/* if switch down, sense up */
-  return p1val;
+  P2IES |= (p2val & SWITCHES);	/* if switch up, sense down */
+  P2IES &= (p2val | ~SWITCHES);	/* if switch down, sense up */
+  return p2val;
 }
 
-void 
-switch_init()			/* setup switch */
+void switch_init()			/* setup switch */
 {  
   P2REN |= SWITCHES;		/* enables resistors for switches */
   P2IE |= SWITCHES;		/* enable interrupts from switches */
@@ -32,35 +25,24 @@ switch_init()			/* setup switch */
   led_update();
 }
 
-void
-switch_interrupt_handler()
+void switch_interrupt_handler()
 {
-  char p1val = switch_update_interrupt_sense();
+  char p2val = switch_update_interrupt_sense();
 
-  /*If button = down switch_statedown = 1*/
-  switch_state_down = (p1val & BIT0) ? 0 : 1; /* 0 when SW1 is up */
-  switch_state_down = (p1val & BIT1) ? 0 : 1;
-  switch_state_down = (p1val & BIT2) ? 0 : 1;
-  switch_state_down = (p1val & BIT3) ? 0 : 1;
-    
-  switch_state_changed = 1;
-  
-  led_update();
-
-  if(switch_state_down)
+  if(p2val & SW1 ? 0 : 1)
     {
-      state = 1;
+      state_advance(1);
     }
-  if(switch_state_down2)
+  if(p2val & SW2 ? 0 : 2)
     {
-      state = 2;
+      state_advance(2);
     }
-  if(switch_state_down3)
+  if(p2val & SW3 ? 0 : 3)
     {
-      state = 3;
+      state_advance(3);
     }
-  if(switch_state_down4)
+  if(p2val & SW4 ? 0 : 4)
     {
-      state = 4;
+      state_advance(4);
     }
 }
