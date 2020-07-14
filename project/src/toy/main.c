@@ -12,7 +12,5 @@ void main(void)
   led_init();
   buzzer_init();
   
-  enableWDTInterrupts();
-
   or_sr(0x18);
 }
